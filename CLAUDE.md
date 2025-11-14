@@ -205,7 +205,7 @@ services:
     supports_thinking: true   # Official API supports thinking (default)
 
   - id: "third-party-api"
-    url: "https://open.bigmodel.cn/api/anthropic/v1/messages"
+    url: "https://api.example.com/v1/messages"
     role: "executor"
     supports_thinking: false  # Third-party API doesn't support thinking
 ```

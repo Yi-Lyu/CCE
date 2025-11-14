@@ -53,7 +53,7 @@ services:
   # 第三方 API - 不支持 thinking
   - id: "zhipu-glm"
     name: "智谱清言"
-    url: "https://open.bigmodel.cn/api/anthropic/v1/messages"
+    url: "https://api.example.com/v1/messages"
     api_key: "xxx.yyy"
     role: "executor"
     supports_thinking: false  # ⚠️ 必须显式设置为 false
@@ -125,7 +125,7 @@ services:
 
   # 简单任务使用第三方 API（不支持 thinking）
   - id: "zhipu-haiku"
-    url: "https://open.bigmodel.cn/api/anthropic/v1/messages"
+    url: "https://api.example.com/v1/messages"
     role: "executor"
     supports_thinking: false  # 自动移除 thinking
 
@@ -145,12 +145,12 @@ difficulty_mapping:
 ```yaml
 services:
   - id: "evaluator"
-    url: "https://open.bigmodel.cn/api/anthropic/v1/messages"
+    url: "https://api.example.com/v1/messages"
     role: "evaluator"
     supports_thinking: false  # 第三方 API
 
   - id: "executor-1"
-    url: "https://open.bigmodel.cn/api/anthropic/v1/messages"
+    url: "https://api.example.com/v1/messages"
     role: "executor"
     supports_thinking: false  # 第三方 API
 

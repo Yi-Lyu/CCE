@@ -1,6 +1,8 @@
 # Project-specific files
 CLAUDE.md
 CODEBASE_ANALYSIS.md
+CCE_COMPREHENSIVE_ANALYSIS.md
+README_FOR_DEVELOPERS.md
 
 # Development configuration files
 proxy/configs/config.dev.yaml
@@ -9,6 +11,7 @@ proxy/configs/config.yaml
 # Build artifacts
 build/
 dist/
+releases/
 *.exe
 *.dll
 *.so

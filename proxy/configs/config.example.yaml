@@ -1,0 +1,107 @@
+# Claude 智能代理服务配置示例
+# 将此文件复制为 config.yaml 并修改为您的实际配置
+
+# 代理服务配置
+proxy:
+  port: 27015  # 代理监听端口
+
+# 服务列表
+services:
+  # 决策者服务 - 必须有至少一个 role 为 "evaluator" 的服务
+  - id: "evaluator-main"
+    name: "主决策者服务"
+    url: "https://api.anthropic.com/v1/messages"  # 决策者服务的地址
+    api_key: "cr_your_evaluator_api_key_here"     # 替换为您的 API Key
+    role: "evaluator"
+    supports_thinking: true   # 官方API支持thinking模式（默认值，可省略此行）
+
+  # 执行者服务 - role 为 "executor" 的服务
+  - id: "easy-executor"
+    name: "Easy Executor (简单任务处理)"
+    url: "https://api.example.com/v1/messages"  # 第三方API示例
+    api_key: "cr_your_easy_api_key_here"
+    role: "executor"
+    supports_thinking: false  # 第三方API通常不支持thinking，设置为false
+
+  - id: "harder-executor"
+    name: "Harder Executor (复杂任务处理)"
+    url: "https://api.anthropic.com/v1/messages"  # 官方Anthropic API
+    api_key: "cr_your_harder_api_key_here"
+    role: "executor"
+    supports_thinking: true   # 官方API支持thinking（默认值，可省略）
+
+  # 第三方Claude兼容API示例（智谱清言、通义千问等）
+  - id: "third-party-service"
+    name: "第三方Claude兼容API"
+    url: "https://open.bigmodel.cn/api/anthropic/v1/messages"  # 智谱清言示例
+    api_key: "your_third_party_api_key"
+    role: "executor"
+    supports_thinking: false  # ⚠️ 重要：第三方API不支持thinking，必须设置为false
+
+# 难度等级映射 (1-5)
+# 根据决策者返回的难度等级，将请求转发到对应的服务
+difficulty_mapping:
+  "1": "easy-executor"    # 最简单的任务
+  "2": "easy-executor"    # 简单任务
+  "3": "easy-executor"    # 中等任务
+  "4": "harder-executor"  # 复杂任务
+  "5": "harder-executor"  # 最复杂的任务
+
+# 决策者配置
+evaluator:
+  # 评估使用的模型
+  model: "claude-3-haiku-20240307"
+
+  # 最大Token数（评估响应通常很短）
+  max_tokens: 100
+
+  # 是否包含历史上下文
+  include_history: true
+
+  # 历史上下文的最大轮数
+  max_history_rounds: 3
+
+  # Prompt模板（支持变量替换）
+  # 可用变量：{{.Model}}, {{.MessageCount}}, {{.CurrentTask}}, {{.HistoryContext}}
+  prompt_template: |
+    你是一个任务复杂度评估专家。请分析以下 Claude API 请求中【当前这一步具体任务】的复杂度，并返回 JSON 格式的结果。
+
+    重要说明：
+    - 请评估【当前这一步操作】的复杂度，而非整体项目的复杂度
+    - 例如：如果整体任务是"开发复杂电商系统"，但当前步骤是"创建一个配置文件"，应评估为简单任务（1-2级）
+    - 请聚焦于当前需要执行的具体操作，不要被项目整体规模影响判断
+
+    当前任务信息：
+    - 模型: {{.Model}}
+    - 消息数量: {{.MessageCount}}
+    - 当前任务: {{.CurrentTask}}{{.HistoryContext}}
+
+    评估标准：
+    1 级（非常简单）：简单查询、基础问答、信息查找、单行代码、创建简单文件
+    2 级（简单）：基础分析、简单总结、格式转换、简单函数编写、修改配置
+    3 级（中等）：代码编写、数据分析、文档生成、模块开发、多文件修改
+    4 级（复杂）：架构设计、复杂重构、深度分析、多模块集成、算法实现
+    5 级（非常复杂）：系统设计、多步骤规划任务、创新性解决方案、大型重构
+
+    请严格按照以下 JSON 格式返回，不要包含任何其他内容：
+    {
+      "difficulty_level": 数字（必须是1-5之间的整数）
+    }
+
+    你的评估：
+
+# 功能开关
+features:
+  # 决策者服务不可用时是否使用默认难度等级
+  evaluator_fallback: false  
+  
+  # 目标服务不可用时是否自动切换到其他服务
+  service_auto_switch: false 
+  
+  # 是否记录请求日志（用于分析和调试）
+  request_logging: true      
+
+# 日志配置
+logging:
+  level: "info"              # 日志级别: debug, info, warn, error
+  output_path: "./logs"      # 日志文件保存路径

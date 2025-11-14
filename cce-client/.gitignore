@@ -1,0 +1,33 @@
+# 构建产物
+build/
+*.app
+*.exe
+*.dll
+*.so
+*.dylib
+
+# 资源文件（内嵌的二进制）
+resources/claude-proxy
+
+# Go 相关
+*.test
+*.out
+vendor/
+
+# macOS 相关
+.DS_Store
+._*
+
+# IDE 相关
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# 依赖图
+deps.png
+
+# 临时文件
+*.log
+*.tmp

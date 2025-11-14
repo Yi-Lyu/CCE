@@ -1,0 +1,17 @@
+[Details]
+# 应用元数据
+Icon = "resources/icon.png"
+Name = "CCE"
+ID = "com.cce.claude-proxy"
+Version = "1.0.0"
+Build = 1
+
+[Details.Metadata]
+# 应用详细信息
+DeveloperName = "CCE Team"
+DeveloperWebsite = "https://github.com/yourusername/cce-client"
+Category = "Developer Tools"
+Description = "Claude Code Exchange - 智能代理服务管理客户端"
+Copyright = "© 2025 CCE Team"
+# macOS 特定配置：设置为后台应用（不在 Dock 中显示）
+LSUIElement = true
